@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ping
+        if: ${{ secrets.HEALTH_URL != '' && secrets.HEALTH_TOKEN != '' }}
         env:
           TOKEN: ${{ secrets.HEALTH_TOKEN }}
           HEALTH_URL: ${{ secrets.HEALTH_URL }}   # https://<ref>.supabase.co/functions/v1/health

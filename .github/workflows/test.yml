@@ -1,0 +1,28 @@
+name: test
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  deno:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Unit tests
+        working-directory: supabase/functions
+        run: deno test --allow-env --allow-read _shared/
+      - name: Type-check functions
+        working-directory: supabase/functions
+        run: for f in */index.ts; do deno check "$f"; done
+  miniapp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - working-directory: miniapp
+        run: npm ci && npm run build
