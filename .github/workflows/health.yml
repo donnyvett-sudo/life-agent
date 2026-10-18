@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ping
-        if: ${{ secrets.HEALTH_URL != '' && secrets.HEALTH_TOKEN != '' }}
         env:
           TOKEN: ${{ secrets.HEALTH_TOKEN }}
           HEALTH_URL: ${{ secrets.HEALTH_URL }}   # https://<ref>.supabase.co/functions/v1/health
         run: |
+          if [ -z "$HEALTH_URL" ] || [ -z "$TOKEN" ]; then echo "HEALTH_URL / HEALTH_TOKEN not set, skipping"; exit 0; fi
           body=$(curl -sS --max-time 30 -w '\n%{http_code}' \
             -H "X-Token: $TOKEN" \
             "$HEALTH_URL")
