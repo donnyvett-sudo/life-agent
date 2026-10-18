@@ -122,17 +122,29 @@ export const dbStore: TokenStore = {
   },
 };
 
-/** Salted hash of the caller's address: enough to count attempts, no raw addresses stored. */
-export async function ipHashOf(req: Request): Promise<string> {
-  const ip = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
-  const salt = Deno.env.get("TELEGRAM_WEBHOOK_SECRET") ?? "";
-  return (await sha256Hex(salt + "|" + ip)).slice(0, 32);
+/** Address of the caller: cf-connecting-ip, else the LAST x-forwarded-for hop (the one our own proxy appended; earlier hops are client-controlled). */
+export function clientIp(req: Request): string {
+  const cf = req.headers.get("cf-connecting-ip")?.trim();
+  if (cf) return cf;
+  const hops = req.headers.get("x-forwarded-for")?.split(",").map((h) => h.trim()).filter(Boolean) ?? [];
+  return hops.at(-1) ?? "unknown";
 }
 
-/** Token from the X-Token header; ?token= still works but is flagged as deprecated. */
+/** Salt for IP hashes: RATE_SALT, else derived from the service-role key. Never empty. */
+export function rateSalt(): string {
+  return Deno.env.get("RATE_SALT") || "derived:" + (Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "no-key");
+}
+
+/** Salted hash of the caller's address: enough to count attempts, no raw addresses stored. */
+export async function ipHashOf(req: Request): Promise<string> {
+  return (await sha256Hex(rateSalt() + "|" + clientIp(req))).slice(0, 32);
+}
+
+/** Token from the X-Token header. ?token= (it lands in logs and history) is read only when ALLOW_QUERY_TOKEN=1. */
 export function tokenFrom(req: Request): { token: string | null; fromQuery: boolean } {
   const h = req.headers.get("x-token");
   if (h) return { token: h, fromQuery: false };
+  if (Deno.env.get("ALLOW_QUERY_TOKEN") !== "1") return { token: null, fromQuery: false };
   const q = new URL(req.url).searchParams.get("token");
   return { token: q, fromQuery: q !== null };
 }

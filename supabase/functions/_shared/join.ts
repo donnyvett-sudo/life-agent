@@ -5,7 +5,7 @@ import { attachInvite, claimInvite, peekInvite, releaseInvite } from "./invites.
 import { createPairingCode, dbPairingStore, GLOBAL_KEY, PAIR_LIMIT, PairError, type Platform, PLATFORMS } from "./pairing.ts";
 
 type Body = Record<string, unknown>;
-const CODE = /^[A-Z0-9]{4,16}$/;
+const CODE = /^[A-Z0-9]{8}$/;
 
 const validTz = (tz: unknown): string => {
   if (typeof tz !== "string") return "UTC";

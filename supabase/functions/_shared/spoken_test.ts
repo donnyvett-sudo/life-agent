@@ -21,12 +21,12 @@ Deno.test("spoken: typical phrases", () => {
 Deno.test("spoken: income", () => {
   const e = one("Получил стипендию 3000 тенге");
   assertEquals([e.kind, e.currency, e.note], ["income", "KZT", "стипендию"]);
-  assertEquals(one("пришло 500 от мамы").kind, "income");
+  assertEquals(one("пришло 500 от друга").kind, "income");
 });
 
 Deno.test("spoken: пополнение и деньги от людей", () => {
-  assertEquals(one("мне скинули 5000 тенге от мамы").kind, "income");
-  assertEquals(one("мне скинули 5000 тенге от мамы").note, "мамы");
+  assertEquals(one("мне скинули 5000 тенге от друга").kind, "income");
+  assertEquals(one("мне скинули 5000 тенге от друга").note, "друга");
   assertEquals(one("пополнил счёт на 20000 тенге").kind, "income");
   assertEquals(one("прислали 300 юаней").kind, "income");
   assertEquals(looksLikeMoney("мне скинули 5000 тенге"), true);

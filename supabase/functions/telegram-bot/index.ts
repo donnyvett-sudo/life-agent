@@ -1,4 +1,5 @@
 // Webhook Telegram. Авторизация — заголовок X-Telegram-Bot-Api-Secret-Token.
+import { safeEqual } from "../_shared/initdata.ts";
 import {
   evaluateNight,
   getSleep,
@@ -152,7 +153,7 @@ const help = (user: User) =>
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("ok");
-  if (!WEBHOOK_SECRET || req.headers.get("x-telegram-bot-api-secret-token") !== WEBHOOK_SECRET) {
+  if (!WEBHOOK_SECRET || !safeEqual(req.headers.get("x-telegram-bot-api-secret-token") ?? "", WEBHOOK_SECRET)) {
     return new Response("forbidden", { status: 403 });
   }
   const update = await req.json() as Update;

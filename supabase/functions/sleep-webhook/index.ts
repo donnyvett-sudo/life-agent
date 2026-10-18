@@ -1,5 +1,5 @@
 // Приём сна из iOS «Команд». Авторизация — персональный токен пользователя
-// (users.ingest_token) в заголовке X-Token (или ?token=).
+// (users.ingest_token) в заголовке X-Token.
 import { claimEvent, getSleep, lateSleepMessages, reevaluateNight, say, sleepLine } from "../_shared/coach.ts";
 import { check, db, type User } from "../_shared/db.ts";
 import { authRequest, flagQueryToken } from "../_shared/tokens.ts";

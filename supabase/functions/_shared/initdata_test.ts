@@ -28,3 +28,9 @@ Deno.test("tampered / wrong token / expired", async () => {
   const old = await make({ ...fields, auth_date: "1000" });
   assertEquals(await verifyInitData(old, TOKEN), null);
 });
+
+Deno.test("empty bot token never verifies (even a payload signed with the empty key)", async () => {
+  const fields = { auth_date: String(Math.floor(Date.now() / 1000)), user: JSON.stringify({ id: 42 }) };
+  const forged = new URLSearchParams({ ...fields, hash: await signInitData(fields, "") }).toString();
+  assertEquals(await verifyInitData(forged, ""), null);
+});

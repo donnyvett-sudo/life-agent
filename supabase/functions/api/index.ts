@@ -12,7 +12,7 @@ import { MINIAPP_URL } from "../_shared/config.ts";
 import { joinWithInvite } from "../_shared/join.ts";
 import { dbPairingStore, PairError, redeemPairingCode } from "../_shared/pairing.ts";
 
-const BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN")!;
+const BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN") ?? "";
 // Browser origins allowed to call the API (comma-separated secret). Add your miniapp host, e.g. https://you.github.io
 const ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
 
@@ -144,6 +144,7 @@ Deno.serve(async (req) => {
 async function authUser(req: Request): Promise<User> {
   const initData = req.headers.get("x-telegram-init-data") ?? "";
   if (initData) {
+    if (!BOT_TOKEN) throw new HttpError(401, "bad initData"); // Telegram not configured: initData cannot be trusted
     const tg = await verifyInitData(initData, BOT_TOKEN);
     if (!tg) throw new HttpError(401, "bad initData");
     const user = await findUser(tg.id);

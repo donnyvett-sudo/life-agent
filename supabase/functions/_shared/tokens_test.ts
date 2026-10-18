@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertRejects } from "jsr:@std/assert@1";
-import { AuthError, authToken, LIMIT, scopeOk, sha256Hex, tokenFrom, type TokenRow, type TokenStore } from "./tokens.ts";
+import { AuthError, authToken, clientIp, LIMIT, scopeOk, sha256Hex, tokenFrom, type TokenRow, type TokenStore } from "./tokens.ts";
 import type { User } from "./db.ts";
 
 const U = (id: string, allowed = true) => ({ id, is_allowed: allowed }) as unknown as User;
@@ -80,9 +80,23 @@ Deno.test("a blocked user is refused even with a valid token", async () => {
   assertEquals(e.status, 401);
 });
 
-Deno.test("tokenFrom: header wins, query is flagged", () => {
+Deno.test("tokenFrom: header wins; ?token= only with ALLOW_QUERY_TOKEN=1", () => {
   const a = tokenFrom(new Request("https://x/f?token=q", { headers: { "x-token": "h" } }));
   assertEquals(a, { token: "h", fromQuery: false });
-  assertEquals(tokenFrom(new Request("https://x/f?token=q")), { token: "q", fromQuery: true });
-  assertEquals(tokenFrom(new Request("https://x/f")), { token: null, fromQuery: false });
+  assertEquals(tokenFrom(new Request("https://x/f?token=q")), { token: null, fromQuery: false });
+  Deno.env.set("ALLOW_QUERY_TOKEN", "1");
+  try {
+    assertEquals(tokenFrom(new Request("https://x/f?token=q")), { token: "q", fromQuery: true });
+    assertEquals(tokenFrom(new Request("https://x/f")), { token: null, fromQuery: false });
+  } finally {
+    Deno.env.delete("ALLOW_QUERY_TOKEN");
+  }
 });
+
+Deno.test("clientIp: cf-connecting-ip, else the last x-forwarded-for hop", () => {
+  const r = (h: Record<string, string>) => new Request("https://x/", { headers: h });
+  assertEquals(clientIp(r({ "cf-connecting-ip": "1.1.1.1", "x-forwarded-for": "9.9.9.9" })), "1.1.1.1");
+  assertEquals(clientIp(r({ "x-forwarded-for": "6.6.6.6, 2.2.2.2" })), "2.2.2.2");
+  assertEquals(clientIp(r({})), "unknown");
+});
+

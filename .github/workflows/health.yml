@@ -1,5 +1,5 @@
 # External liveness check: if Supabase, the scheduler or the bot die, nothing inside the system can report it.
-# A failing workflow run emails the repo owner. Needs repo secrets HEALTH_URL and HEALTH_TOKEN (an API token of the admin user).
+# A failing workflow run emails the repo owner. Needs repo secrets HEALTH_URL and HEALTH_TOKEN (any API token with the `ingest` scope is enough; use that, not a full-scope token).
 name: health
 
 on:

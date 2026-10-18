@@ -51,6 +51,9 @@ export async function registerOnStart(
 
   const { count } = await db.from("users").select("id", { count: "exact", head: true });
   if ((count ?? 0) === 0) {
+    // Optional: only this Telegram id may claim an empty database (otherwise the first /start wins).
+    const first = Deno.env.get("FIRST_OWNER_TG_ID");
+    if (first && first !== String(from.id)) return { kind: "closed" };
     const user = check(
       await db.from("users").insert({
         tg_id: from.id,

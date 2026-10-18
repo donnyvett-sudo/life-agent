@@ -1,5 +1,5 @@
 // Приём шагов, веса и пульса покоя из iOS «Команд». Авторизация — личный токен
-// пользователя (users.ingest_token) в заголовке X-Token (или ?token=).
+// пользователя (users.ingest_token) в заголовке X-Token.
 // Ответ {reply} Shortcuts показывает уведомлением.
 import { bodyOn, fmtNum, parseBody, saveBody, STEP_GOAL } from "../_shared/body.ts";
 import { check, db, type User } from "../_shared/db.ts";
@@ -24,8 +24,8 @@ Deno.serve(flagQueryToken(async (req) => {
     payload = { text: raw };
   }
 
-  // Лог нужен для настройки команды на iPhone: видно, что именно отдало «Здоровье».
-  console.log("body payload", raw.slice(0, 300));
+  // Health data: logged only when debugging a Shortcut (secret DEBUG=1), never by default.
+  if (Deno.env.get("DEBUG") === "1") console.log("body payload", raw.slice(0, 300));
 
   const today = localNow(user.tz).date;
   const rows = parseBody(payload, today);

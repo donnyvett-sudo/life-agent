@@ -109,7 +109,7 @@ async function ask(
       console.log(`Gemini ${m}: ${res.status} in ${Date.now() - started} ms`);
       if (!res.ok) {
         lastStatus = res.status;
-        console.warn(`Gemini ${m}: ${(await res.text()).slice(0, 300)}`);
+        console.warn(`Gemini ${m}: HTTP ${res.status}`); // the body can echo the prompt: not logged
         return null;
       }
       const json = await res.json() as { candidates?: { content?: { parts?: Part[] } }[] };

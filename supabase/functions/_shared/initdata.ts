@@ -33,6 +33,7 @@ export async function verifyInitData(
   botToken: string,
   maxAgeSec = 24 * 60 * 60,
 ): Promise<TgInitUser | null> {
+  if (!botToken) return null; // an unset token would make the signing key public knowledge
   const params = new URLSearchParams(initData);
   const hash = params.get("hash");
   if (!hash) return null;

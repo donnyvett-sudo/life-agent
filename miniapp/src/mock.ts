@@ -77,7 +77,7 @@ export const MOCK: Record<string, unknown> = {
   } satisfies Today,
   "/sleep": { target: { bed: "23:00", wake: "07:00" }, today: day(0), days: 14, nights } satisfies SleepHistory,
   "/settings": {
-    tz: "Asia/Shanghai",
+    tz: "UTC",
     lang: (localStorage.getItem("lang") === "en" ? "en" : "ru") as "ru" | "en",
     profile: { about: "", name: "Алекс", currency: "CNY", github: "none", githubLogin: null },
     schedule,
@@ -116,7 +116,7 @@ MOCK["/finance"] = {
   accounts: [
     { id: "a1", title: "Wallet A", currency: "CNY", balance: 1500, balanceCny: 1500, balanceDisplay: 1500, openingBalance: 0, isDefault: true, inTotal: true, isArchived: false },
     { id: "a2", title: "Wallet B", currency: "CNY", balance: 3.2, balanceCny: 3.2, balanceDisplay: 3.2, openingBalance: 0, isDefault: false, inTotal: true, isArchived: false },
-    { id: "a3", title: "Bank KZT", currency: "KZT", balance: 280000, balanceCny: 4200, balanceDisplay: 4200, openingBalance: 0, isDefault: true, inTotal: true, isArchived: false },
+    { id: "a3", title: "Bank B", currency: "KZT", balance: 280000, balanceCny: 4200, balanceDisplay: 4200, openingBalance: 0, isDefault: true, inTotal: true, isArchived: false },
     { id: "a4", title: "Bank USD", currency: "USD", balance: 750, balanceCny: 5100, balanceDisplay: 5100, openingBalance: 0, isDefault: true, inTotal: false, isArchived: false },
     { id: "a5", title: "Old card", currency: "KZT", balance: 0, balanceCny: 0, balanceDisplay: 0, openingBalance: 0, isDefault: false, inTotal: false, isArchived: true },
   ],

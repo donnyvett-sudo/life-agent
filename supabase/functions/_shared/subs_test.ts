@@ -10,10 +10,10 @@ const charge = (date: string, amount: number, note: string, currency = "CNY"): C
 
 Deno.test("detect: ежемесячное списание с плавающей датой", () => {
   const subs = detect([
-    charge("2026-06-03", 35.9, "PingAn"),
-    charge("2026-07-02", 35.9, "PingAn"),
-    charge("2026-08-04", 35.9, "PingAn"),
-    charge("2026-09-03", 35.9, "PingAn"),
+    charge("2026-06-03", 35.9, "Bank A"),
+    charge("2026-07-02", 35.9, "Bank A"),
+    charge("2026-08-04", 35.9, "Bank A"),
+    charge("2026-09-03", 35.9, "Bank A"),
   ], "2026-09-22");
   assertEquals(subs.length, 1);
   assertEquals(subs[0].period, "month");

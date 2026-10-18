@@ -409,7 +409,7 @@ export async function settings(user: User) {
     schedule: user.settings.schedule,
     sleep: user.settings.sleep,
     coach: user.settings.coach,
-    ai: { left: aiLeft(user), limit: DAILY_AI },
+    ai: { left: await aiLeft(user), limit: DAILY_AI },
     supplements: supps.map((s) => ({
       id: s.id,
       name: s.name,

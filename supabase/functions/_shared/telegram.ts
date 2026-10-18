@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { type Lang, t } from "./i18n.ts";
+import { redact } from "./redact.ts";
 const TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
 const API = `https://api.telegram.org/bot${TOKEN}`;
 
@@ -73,7 +74,7 @@ export async function deleteMessage(chatId: number | null, messageId: number) {
   try {
     await call("deleteMessage", { chat_id: chatId, message_id: messageId });
   } catch (e) {
-    console.warn(String(e));
+    console.warn(redact(String(e)));
   }
 }
 
@@ -146,7 +147,7 @@ export async function editCaption(chatId: number | null, messageId: number, capt
       reply_markup: { inline_keyboard: keyboard ?? [] },
     });
   } catch (e) {
-    console.warn(String(e));
+    console.warn(redact(String(e)));
   }
 }
 
@@ -163,7 +164,7 @@ export async function edit(chatId: number | null, messageId: number, text: strin
     });
   } catch (e) {
     // «message is not modified» и удалённые сообщения — не критично.
-    console.warn(String(e));
+    console.warn(redact(String(e)));
   }
 }
 
@@ -177,7 +178,7 @@ export async function dropKeyboard(chatId: number | null, messageId: number) {
       reply_markup: { inline_keyboard: [] },
     });
   } catch (e) {
-    console.warn(String(e));
+    console.warn(redact(String(e)));
   }
 }
 
@@ -185,7 +186,7 @@ export async function answerCallback(id: string, text?: string) {
   try {
     await call("answerCallbackQuery", { callback_query_id: id, ...(text ? { text } : {}) });
   } catch (e) {
-    console.warn(String(e));
+    console.warn(redact(String(e)));
   }
 }
 
@@ -198,7 +199,7 @@ export async function typing(chatId: number | null) {
   try {
     await call("sendChatAction", { chat_id: chatId, action: "typing" });
   } catch (e) {
-    console.warn(String(e));
+    console.warn(redact(String(e)));
   }
 }
 
@@ -233,7 +234,7 @@ export async function setupChat(chatId: number | null, appUrl: string, l: Lang =
       commands: COMMANDS.map(([command, description]) => ({ command, description: t(l, description) })),
     });
   } catch (e) {
-    console.warn(String(e));
+    console.warn(redact(String(e)));
   }
 }
 
@@ -247,7 +248,7 @@ export async function setKeyboard(chatId: number | null, messageId: number, keyb
       reply_markup: { inline_keyboard: keyboard },
     });
   } catch (e) {
-    console.warn(String(e));
+    console.warn(redact(String(e)));
   }
 }
 

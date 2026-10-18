@@ -52,7 +52,7 @@ Deno.test("перевод: курс и комиссия — не суммы пе
 
 Deno.test("перевод: приход от человека переводом не считается", () => {
   assertEquals(looksLikeTransfer("мне скинули 5000 тенге"), false);
-  assertEquals(looksLikeTransfer("пришло 500 от мамы"), false);
+  assertEquals(looksLikeTransfer("пришло 500 от друга"), false);
   assertEquals(parseTransfer("мне перевели 3000 тенге"), null);
 });
 
