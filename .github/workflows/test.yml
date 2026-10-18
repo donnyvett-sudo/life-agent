@@ -12,6 +12,9 @@ jobs:
         with:
           deno-version: v2.x
       - name: Unit tests
+        env:
+          SUPABASE_URL: http://x
+          SUPABASE_SERVICE_ROLE_KEY: x
         working-directory: supabase/functions
         run: deno test --allow-env --allow-read _shared/
       - name: Type-check functions
