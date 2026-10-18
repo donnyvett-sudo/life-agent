@@ -1,0 +1,22 @@
+# secrets
+.env
+.env.*
+!.env.example
+supabase/.temp/
+supabase/.branches/
+supabase/functions/.env
+*.pem
+
+# private data (keep only the README and the synthetic sample)
+imports/*
+!imports/README.md
+!imports/sample-operations.csv
+
+# build / tooling
+node_modules/
+dist/
+.DS_Store
+*.log
+*.tsbuildinfo
+.claude/
+.serena/

@@ -1,0 +1,13 @@
+{
+  "name": "Life",
+  "short_name": "Life",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#151411",
+  "theme_color": "#151411",
+  "icons": [
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

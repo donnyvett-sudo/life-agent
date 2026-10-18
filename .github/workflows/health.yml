@@ -1,0 +1,24 @@
+# External liveness check: if Supabase, the scheduler or the bot die, nothing inside the system can report it.
+# A failing workflow run emails the repo owner. Needs repo secrets HEALTH_URL and HEALTH_TOKEN (an API token of the admin user).
+name: health
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ping
+        env:
+          TOKEN: ${{ secrets.HEALTH_TOKEN }}
+          HEALTH_URL: ${{ secrets.HEALTH_URL }}   # https://<ref>.supabase.co/functions/v1/health
+        run: |
+          body=$(curl -sS --max-time 30 -w '\n%{http_code}' \
+            -H "X-Token: $TOKEN" \
+            "$HEALTH_URL")
+          code=$(echo "$body" | tail -n1)
+          echo "$body" | head -n-1
+          [ "$code" = "200" ]

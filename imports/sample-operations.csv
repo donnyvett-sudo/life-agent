@@ -1,0 +1,4 @@
+date,kind,amount,currency,amount_cny,note,category,account
+2026-01-05T09:10:00Z,expense,18,CNY,18,taxi,Transport,Wallet A
+2026-01-05T12:40:00Z,expense,35,CNY,35,lunch,Cafe,Wallet A
+2026-01-06T08:00:00Z,income,3000,CNY,3000,allowance,Family,Wallet A
